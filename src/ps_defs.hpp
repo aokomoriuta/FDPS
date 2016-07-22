@@ -855,6 +855,7 @@ namespace ParticleSimulator{
             std::cerr<<"argv[i]"<<argv[i]<<std::endl;
         }
 */
+#ifndef DISABLE_FDPS_STDOUT
 #ifdef MONAR
         bool monar = false;
         bool MONAR = false;
@@ -915,6 +916,7 @@ namespace ParticleSimulator{
 	    fprintf(stderr, "******** FDPS has successfully begun. ********\n");
 #endif //MONAR
         }
+#endif
     }
 
     static inline void Finalize(){
@@ -922,6 +924,7 @@ namespace ParticleSimulator{
 
         MPI::Finalize();
 #endif
+#ifndef DISABLE_FDPS_STDOUT
         bool monar = false;
         if(Comm::getRank() == 0) {
             if(monar){
@@ -930,6 +933,7 @@ namespace ParticleSimulator{
                 fprintf(stderr, "******** FDPS has successfully finished. ********\n");
             }
         }
+#endif
     }
 
 

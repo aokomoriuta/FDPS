@@ -235,9 +235,11 @@ namespace ParticleSimulator{
         ni_ave_ = nj_ave_ = 0;
 
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"np_ave="<<np_ave<<std::endl;
         }
+#endif
 
         const F64 np_one_dim = pow( ((F64)np_ave)*1.0001, 1.0/DIMENSION) + 4;
 #ifdef PARTICLE_SIMULATOR_TWO_DIMENSION
@@ -301,9 +303,11 @@ namespace ParticleSimulator{
         n_cell_open_ = new CountT[n_thread];
 
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"used mem size for tree(0)="<<this->getMemSizeUsed()*1e-9<<"[GB]"<<std::endl;
         }
+#endif
         if( typeid(TSM) == typeid(SEARCH_MODE_LONG) || 
             typeid(TSM) == typeid(SEARCH_MODE_LONG_CUTOFF) || 
             typeid(TSM) == typeid(SEARCH_MODE_LONG_SCATTER) ){
@@ -360,9 +364,11 @@ namespace ParticleSimulator{
 	    }
         }
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"used mem size for tree(1)="<<this->getMemSizeUsed()*1e-9<<"[GB]"<<std::endl;
         }
+#endif
 
         tp_loc_.reserve( epi_org_.capacity() );
         tp_glb_.reserve( epj_org_.capacity() );
@@ -372,9 +378,11 @@ namespace ParticleSimulator{
         ipg_.reserve( std::min(epi_org_.capacity()/n_group_limit_*4, epi_org_.capacity()) );
 
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"used mem size for tree(2)="<<this->getMemSizeUsed()*1e-9<<"[GB]"<<std::endl;
         }
+#endif
 
         for(S32 i=0; i<n_thread; i++) id_proc_send_[i] = new S32[n_proc];
         epj_send_.reserve(n_surface_for_comm_);
@@ -389,9 +397,11 @@ namespace ParticleSimulator{
         force_sorted_.reserve(epi_org_.capacity());
 
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"used mem size for tree(3)="<<this->getMemSizeUsed()*1e-9<<"[GB]"<<std::endl;
         }
+#endif
 
         // new variables for commnuication of LET
         // for scatterEP
@@ -459,9 +469,11 @@ namespace ParticleSimulator{
             }
         }
         Comm::barrier();
+#ifndef DISABLE_FDPS_STDOUT
         if(Comm::getRank() == 0){
             std::cerr<<"used mem size for tree(3)="<<this->getMemSizeUsed()*1e-9<<"[GB]"<<std::endl;
         }
+#endif
     }
 
     template<class TSM, class Tforce, class Tepi, class Tepj,
