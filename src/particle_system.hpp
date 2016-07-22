@@ -20,7 +20,7 @@ namespace ParticleSimulator{
         ReallocatableArray<Tptcl> ptcl_recv_;
         //S32 n_ptcl_limit_;
         //S32 n_ptcl_;
-        S32 n_smp_ptcl_tot_;
+		std::size_t n_smp_ptcl_tot_;
         bool first_call_by_initialize;
         bool first_call_by_setAverageTargetNumberOfSampleParticlePerProcess;
         bool first_call_by_DomainInfo_collect_sample_particle;
@@ -43,12 +43,12 @@ namespace ParticleSimulator{
         */
 
 
-        S32 searchWhichDomainParticleGoTo(const F64vec & pos,
-                                          const S32 n_domain [],
+		std::size_t searchWhichDomainParticleGoTo(const F64vec & pos,
+                                          const std::size_t n_domain [],
                                           const F64ort domain []) {
 #ifdef PARTICLE_SIMULATOR_TWO_DIMENSION
-            S32 idomain = 0;
-            const S32 ny = n_domain[1];
+			std::size_t idomain = 0;
+            const std::size_t ny = n_domain[1];
             while(domain[idomain].high_[0] <= pos[0])
                 idomain += ny;
             while(domain[idomain].high_[1] <= pos[1])
@@ -94,13 +94,13 @@ namespace ParticleSimulator{
 	    //n_smp_ptcl_tot_ = n_smp_ave_ * Comm::getNumberOfProc();
         }
 
-        void setAverageTargetNumberOfSampleParticlePerProcess(const S32 &nsampleperprocess) {
+        void setAverageTargetNumberOfSampleParticlePerProcess(const std::size_t &nsampleperprocess) {
             assert(first_call_by_setAverageTargetNumberOfSampleParticlePerProcess);
             first_call_by_setAverageTargetNumberOfSampleParticlePerProcess = false;
             n_smp_ptcl_tot_ = nsampleperprocess * Comm::getNumberOfProc();
         }
 
-        S32 getTargetNumberOfSampleParticle() {
+        std::size_t getTargetNumberOfSampleParticle() {
             return n_smp_ptcl_tot_;
         }
 
@@ -113,7 +113,7 @@ namespace ParticleSimulator{
             }
         }
 
-        void createParticle(const S32 n_limit, bool clear=true){
+        void createParticle(const std::size_t n_limit, bool clear=true){
             //n_ptcl_limit_ = n_limit;
             //ptcl_ = new Tptcl[n_ptcl_limit_];
             ptcl_.reserve(n_limit);
@@ -122,7 +122,7 @@ namespace ParticleSimulator{
 
 	
         //void setNumberOfParticleLocal(const S32 n){ n_ptcl_ = n; }
-        void setNumberOfParticleLocal(const S32 n){
+        void setNumberOfParticleLocal(const std::size_t n){
             //15/02/20 Hosono bug(?) fix.
             //ptcl_.reserve(n*3+1000);
             ptcl_.resizeNoInitialize(n);
@@ -571,11 +571,16 @@ namespace ParticleSimulator{
         }
 
 	
-        Tptcl & operator [] (const S32 id) {return ptcl_[id];}
-        const Tptcl & operator [] (const S32 id) const {return ptcl_[id];}
-        Tptcl & getParticle(const S32 id=0) {return ptcl_[id];}
-        const Tptcl & getParticle(const S32 id=0) const {return ptcl_[id];}
-        Tptcl * getParticlePointer(const S32 id=0) const {return ptcl_+id;}
+        template<typename T>
+        Tptcl & operator [] (const T id) {return ptcl_[id];}
+		template<typename T>
+        const Tptcl & operator [] (const T id) const {return ptcl_[id];}
+		template<typename T>
+        Tptcl & getParticle(const T id=0) {return ptcl_[id];}
+		template<typename T>
+        const Tptcl & getParticle(const T id=0) const {return ptcl_[id];}
+		template<typename T>
+        Tptcl * getParticlePointer(const T id=0) const {return ptcl_+id;}
         //S32 getNumberOfParticleLocal() const {return n_ptcl_;}
         S32 getNumberOfParticleLocal() const {return ptcl_.size();}
         ////////////////
