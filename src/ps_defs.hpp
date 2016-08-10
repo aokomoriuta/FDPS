@@ -1356,12 +1356,12 @@ namespace ParticleSimulator{
     }
 
     inline F64 GetWtime(){
-#ifdef PARTICLE_SIMULATOR_MPI_PARALLEL
+#if defined(PARTICLE_SIMULATOR_MPI_PARALLEL)
 #ifdef PARTICLE_SIMULATOR_BARRIER_FOR_PROFILE
 	Comm::barrier();
 #endif //PARTICLE_SIMULATOR_BARRIER_FOR_PROFILE
         return MPI::Wtime();
-#elif PARTICLE_SIMULATOR_THREAD_PARALLEL
+#elif defined(PARTICLE_SIMULATOR_THREAD_PARALLEL)
 	return omp_get_wtime();
 #else
 	return clock() / CLOCKS_PER_SEC;
@@ -1370,9 +1370,9 @@ namespace ParticleSimulator{
 
 
     inline F64 GetWtimeNoBarrier(){
-#ifdef PARTICLE_SIMULATOR_MPI_PARALLEL
+#if defined(PARTICLE_SIMULATOR_MPI_PARALLEL)
         return MPI::Wtime();
-#elif PARTICLE_SIMULATOR_THREAD_PARALLEL
+#elif defined(PARTICLE_SIMULATOR_THREAD_PARALLEL)
 	return omp_get_wtime();
 #else
 	return clock() / CLOCKS_PER_SEC;
